@@ -1,0 +1,54 @@
+elk Intro:
+where filebeat: is used for sending system logs to elastic search on port 9200.
+filebeat uses its module named as "system logs" in order to send log to elasticsearch. 
+Metric beat: is used for sending system metrics to elastic search.
+MetricBeat uses its module named as "system metrics" in order to send metric to elasticsearch.
+ 
+
+sudo gpasswd -a  admin docker 
+---------------------
+elastalert docs:
+https://elastalert.readthedocs.io/en/latest/index.html
+-----------
+Installing python 3.6:
+i.sudo apt install -y python3-pip
+ii.sudo apt install build-essential libssl-dev libffi-dev python3-dev
+iii.sudo apt install -y python3-venv
+----
+Installing elastalert On ELK stack for sending alert on  slack/gmail:
+>Need to install python 3.6 version even python2.7 is install or not using:
+1.1.apt-get install python3-pip python3-dev libffi-dev libssl-dev  
+----
+>Install elastalert repo to install elastalert:
+2.git clone https://github.com/Yelp/elastalert.git
+----
+>Install the module:
+3.pip3 install "setuptools>=11.3"
+3.2.pip3 install pyOpenSSL (for securly installing setup.py file
+3.3. python3 setup.py install
+------
+4. Install elasticSearch:
+pip3 install "elasticsearch>=5.0.0"
+----
+5. Setup ElasticSearch:
+ elastalert-create-index
+Note: At the time of running a "elastalert" error make occur which is b/c of package missing:
+Like:pkg_resources.DistributionNotFound: The 'jira>=2.0.0' distribution was not found and is required by elastalert
+Whcih means jira version 2.0.0 need to be download using >pip3 install "jira>=2.0.0"
+Similarly many error occur in my case so run bellow commands to install the required package like:
+..pip3 install jsonschema>=3.0.2
+..pip3 install six==1.11.0	
+..pip3 install oauthlib>==3.0.0
+..pip3 install "PyYAML>=3.12"   ..........................
+------
+6. Once the missing package error finishes the run bellow command for testing the alerts:
+elastalert-test-rule --config config.yaml example_rules/example_frequency.yaml
+Note: In the example_frequency.yaml file we have created a yaml script in which we rules is defined for which condition we are going to alerted and with the time range our alert will be check.
+Note: in the config.yaml file:
+i. We will define the root folder for alert file like our case root folder was example_rules.
+ii. We have defined that alert will be check for every min.
+iii.Then hostname along with port.   
+---
+7. Now fr the last we will the elastAlert
+python3 -m elastalert.elasalert --verbose --rule example_rules/example_frequency.yaml
+Now: Whenever the frequency of alert will match alert will be send.
